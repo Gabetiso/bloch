@@ -28,8 +28,8 @@ Bsl = (fsl * 2 * pi)/gamma;
 Bos = 160e-9;
 tsl = 50e-3;
 
-fos = linspace(0,200,1e3);
-omega_os = 2*pi * fos;
+fos = linspace(0,200,1e3); %variable
+omega_os = 2 * pi * fos;
 scr = zeros( size(fos) );
 
 %-------------------------------------------------------------------------------
@@ -45,12 +45,11 @@ end
 
 figure;
 plot(fos,scr);
-xlabel('\omega_{os}');
+xlabel('fos[Hz]');
 ylabel('SCR');
 xlim([0,200]);
 ylim([0,1]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
-grid on;
-grid minor;
+saveas(gcf,'omega_os','png');

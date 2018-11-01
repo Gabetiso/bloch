@@ -11,8 +11,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 T1 = 884e-3;
 T2 = 72e-3;
-t_rf = 1e-3;  %given parameter
-b_x0 = FA/(gamma*t_rf);
+trf = 1e-3;  %given parameter
+b_x0 = FA/(gamma*trf);
 b_y0 = 0;
 M_inf = 1;
 M_i = [0; 0; 1];
@@ -20,25 +20,21 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of bloch_second
 %-------------------------------------------------------------------------------
-T1rho = 720e-3;
+T1rho = 150e-3;
 T2rho = 70e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 80e-9;
+Bos = 160e-9;
 omega_os = fos * 2 * pi;
-t_sl = 50e-3;
+tsl = 50e-3;
 
 %-------------------------------------------------------------------------------
 %function
 %-------------------------------------------------------------------------------
-[M] = bloch_first( T1, T2, b_x0, b_y0, t_rf, M_inf, M_i );
-[M_sl] = bloch_second( T1rho, T2rho, Bsl, Bos, omega_os, t_sl, M(:,end) );
-[M_sl2] = bloch_first( T1, T2, -b_x0, b_y0, t_rf, M_inf, M_sl(:,end) );
-
-scr = M_sl2(3,end)/M(3,1);
-disp('SCR is')
-disp(scr)
+[M] = bloch_first_fig( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
+[M_sl] = bloch_second_fig( T1rho, T2rho, Bsl, Bos, omega_os, tsl, M(:,end) );
+[M_sl2] = bloch_first_fig( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl(:,end) );
 
 %-------------------------------------------------------------------------------
 %figure
@@ -85,3 +81,4 @@ ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
 grid on;
 grid minor;
+saveas(gcf,'spinlock','png');
