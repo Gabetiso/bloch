@@ -25,7 +25,7 @@ T2rho = 70e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 160e-9;
+Bos = 80e-9;
 omega_os = fos * 2 * pi;
 tsl = 50e-3;
 
