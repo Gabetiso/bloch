@@ -24,8 +24,8 @@ function [M] = bloch_first(T1, T2, b_x0, b_y0, trf, M_inf, M_i)
   M_a = [0; 0; R1*M_inf];
 
   MA = [-R2, omega(3), -omega(2);...
-  - omega(3),      -R2, omega(1);...
-  omega(2),-omega(1), -R1];
-  
+        -omega(3), -R2, omega(1);...
+        omega(2), -omega(1), -R1];
+
   M = expm(MA * trf) * M_i + (eye(3) - expm(MA * trf) )* -inv(MA) * M_a;
 end

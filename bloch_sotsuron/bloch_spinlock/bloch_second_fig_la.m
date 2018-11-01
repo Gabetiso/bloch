@@ -1,4 +1,4 @@
-function [M_sl] = bloch_second_fig(T1rho, T2rho, Bsl, Bos, omega_os, tsl, M_sl_i )
+function [M_sl] = bloch_second_fig_la(T1rho, T2rho, Bsl, Bos, omega_os, tsl, M_sl_i )
   %Dynamics of magnetization in secondary rotating coordinate system (i.e. while spin locking)
 
   gamma = 2 * pi * 42.58e6; %rad/(s*T)
@@ -23,13 +23,16 @@ function [M_sl] = bloch_second_fig(T1rho, T2rho, Bsl, Bos, omega_os, tsl, M_sl_i
 
   MA = [-R2rho, omega_sl(3), - omega_sl(2);...
         -omega_sl(3),      -R1rho,   omega_sl(1);...
-         omega_sl(2),-omega_sl(1), - R2rho];
+        omega_sl(2),-omega_sl(1), - R2rho];
 
   for i = 1:size(t,2)
+    Mc1 = [cos(omega_os*t(i)), -sin(omega_os*t(i)), 0;...
+           sin(omega_os*t(i)), cos(omega_os*t(i)), 0;...
+           0, 0, 1];  %Mateix for basis conversion
     Mc2 = [cos(omega_os*t(i)), 0, sin(omega_os*t(i));...
            0, 1, 0;...
            -sin(omega_os*t(i)), 0, cos(omega_os*t(i))]; %Mateix for basis conversion
     M_sl(:,i) = expm(MA * t(i)) * M_sl_i;
-    M_sl(:,i) = Mc2 * M_sl(:,i); %basis conversion(2 -> 1)
+    M_sl(:,i) =  Mc1 * Mc2 * M_sl(:,i); %basis conversion(2 -> 1)
   end
 end

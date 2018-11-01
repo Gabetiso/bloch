@@ -32,9 +32,9 @@ tsl = 50e-3;
 %-------------------------------------------------------------------------------
 %function
 %-------------------------------------------------------------------------------
-[M] = bloch_first_fig( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
-[M_sl] = bloch_second_fig( T1rho, T2rho, Bsl, Bos, omega_os, tsl, M(:,end) );
-[M_sl2] = bloch_first_fig( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl(:,end) );
+[M] = bloch_first_fig_la( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
+[M_sl] = bloch_second_fig_la( T1rho, T2rho, Bsl, Bos, omega_os, tsl, M(:,end) );
+[M_sl2] = bloch_first_fig_la( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl(:,end) );
 
 %-------------------------------------------------------------------------------
 %figure
@@ -64,14 +64,14 @@ for k = 1:size(M_sl2,2)
   M_sl2_z(k) = M_sl2(3,k);
 end
 
+
 a = -1:1e-2:1;
 b = zeros(size(a));
-
 figure;
-plot3(M_x,M_y,M_z,'b');
+plot3(M_x,M_y,M_z);
 hold on;
-plot3(M_sl_x,M_sl_y,M_sl_z,'r');
-plot3(M_sl2_x,M_sl2_y,M_sl2_z,'b');
+plot3(M_sl_x,M_sl_y,M_sl_z);
+plot3(M_sl2_x,M_sl2_y,M_sl2_z);
 plot3(a,b,b,'k');
 plot3(b,a,b,'k');
 plot3(b,b,a,'k');
