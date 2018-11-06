@@ -26,7 +26,7 @@ fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 160e-9;
+Bos = 80e-9;
 %tsl = 50e-3;
 
 tsl = linspace(0,500e-3,1e3); %variable
@@ -44,11 +44,11 @@ for i = 1:size(tsl,2)
 end
 
 figure;
-plot(tsl*1e3,scr);
+plot(tsl*1e3,abs(scr));
 xlabel('T_{sl}[ms]');
 ylabel('SCR');
 xlim([0,500]);
-ylim([-1,1]);
+ylim([0,1]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
