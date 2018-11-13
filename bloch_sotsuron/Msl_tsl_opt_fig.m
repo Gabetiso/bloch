@@ -27,6 +27,7 @@ fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
 Bos = 8e-9;
+tsl = linspace(0,1000e-3,1e3);
 
 %-------------------------------------------------------------------------------
 %parameter of Newton's methods
@@ -42,29 +43,22 @@ be = sqrt( omega_sl(1)^2 + omega_sl(3)^2 - (R1r-R2r)^2/4 );
 A = (-al+R2r)*M(2)-omega_sl(3)*M(1)+omega_sl(1)*M(3);
 
 %-------------------------------------------------------------------------------
-%Newton's methods
+%function
 %-------------------------------------------------------------------------------
-f = @(t) -M(2)/T1r*exp(-t/T1r)+exp(-al*t)*( al*M(2)*cos(be*t)+be*M(2)*sin(be*t)+A*al/be*sin(be*t)-A*cos(be*t) );%Function
-df = @(t) M(2)/T1r^2*exp(-t/T1r)+exp(-al*t)*( -al^2*M(2)*cos(be*t)-2*al*be*M(2)*sin(be*t)-A*al^2/be*sin(be*t)...
-          +2*al*A*cos(be*t)+A*be*sin(be*t)+be^2*M(2)*cos(be*t) ); %Derivative of f
-
-t = [1e-4,1e-3,1e-2,1e-1,1.5e-1,2e-1,1];
-N_max = 100;
-
-for i = 1:size(t,2)
-  t_old = t(i);
-
-  for n = 1:N_max
-    t_new = t_old - f(t_old)/df(t_old);
-    if abs(t_new - t_old) < 1e-7  %Convergence determination
-      break
-    end
-    t_old = t_new;
-  end
-
-  if n==N_max
-    disp('Don''t convergent')
-  else
-    disp(t_old*1e3)
-  end
+f = zeros(size(tsl));
+df = zeros(size(tsl));
+for i = 1:size(tsl,2)
+  f(i) = M(2)*exp(-tsl(i)/T1r)-exp(-al*tsl(i))*( M(2)*cos(be*tsl(i))+A/be*sin(be*tsl(i)) );
+  df(i) = -M(2)/T1r*exp(-tsl(i)/T1r)+exp(-al*tsl(i))*( al*M(2)*cos(be*tsl(i))+be*M(2)*sin(be*tsl(i))+A*al/be*sin(be*tsl(i))-A*cos(be*tsl(i)) );
 end
+
+figure;
+plot(tsl*1e3,f,tsl*1e3,df);
+xlabel('T_{sl}[ms]');
+ylabel('difference of magnetization');
+xlim([0,1000]);
+ylim([-0.1,0.1]);
+ax = gca;
+ax.FontName = 'Times New Roman';
+ax.FontSize = 16;
+saveas(gcf,'Msl_tsl_opt','png');

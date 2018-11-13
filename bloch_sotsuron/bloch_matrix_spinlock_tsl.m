@@ -20,33 +20,48 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of bloch_second
 %-------------------------------------------------------------------------------
-T1rho = 150e-3;
-T2rho = 70e-3;
+T1r = 150e-3;
+T2r = 70e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 80e-9;
+Bos = 60e-9;
 %tsl = 50e-3;
 
-tsl = linspace(0,500e-3,1e3); %variable
+tsl = linspace(0,500e-3,200); %variable %1/fsl=10msの周期にするべき
 scr = zeros( size(tsl) );
+scr_t1r = zeros( size(tsl) );
 
 %-------------------------------------------------------------------------------
 %function
 %-------------------------------------------------------------------------------
 [M] = bloch_first( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
+[M_sl2off] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M );
 
 for i = 1:size(tsl,2)
-  [M_sl] = bloch_second( T1rho, T2rho, Bsl, Bos, omega_os, tsl(i), M );
-  [M_sl2] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl );
-  scr(i) = M_sl2(3);
+  %SIRS
+  [M_sl] = bloch_second( T1r, T2r, Bsl, Bos, omega_os, tsl(i), M );
+  [M_sl2on] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl );
+
+  %T1rho relaxation
+  M_t1r = [0;M(2)*exp(-tsl(i)/T1r);0];
+  [M_t1r2] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_t1r );
+
+  %signal change ratio
+  scr(i) = M_sl2on(3)/M_sl2off(3);
+  scr_t1r(i) = M_t1r2(3)/M_sl2off(3);
 end
 
 figure;
 plot(tsl*1e3,abs(scr));
+hold on;
+plot(tsl*1e3,abs(scr_t1r));
+plot(tsl*1e3,abs(scr_t1r - scr));
+hold off;
+legend('SIRS','T_{1\rho} relaxation','T_{1\rho} relaxation - SIRS');
 xlabel('T_{sl}[ms]');
-ylabel('SCR');
+ylabel('M_{on} / M_{ref}');
 xlim([0,500]);
 ylim([0,1]);
 ax = gca;
