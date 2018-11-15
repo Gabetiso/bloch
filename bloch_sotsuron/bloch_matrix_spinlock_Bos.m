@@ -36,17 +36,18 @@ scr = zeros( size(Bos) );
 %function
 %-------------------------------------------------------------------------------
 [M] = bloch_first( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
+[M_sl2off] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M );
 
 for i = 1:size(Bos,2)
   [M_sl] = bloch_second( T1rho, T2rho, Bsl, Bos(i), omega_os, tsl, M );
   [M_sl2] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl );
-  scr(i) = M_sl2(3);
+  scr(i) = M_sl2(3)/M_sl2off(3);
 end
 
 figure;
 plot(Bos*1e9,abs(scr));
 xlabel('B_{os}[nT]');
-ylabel('SCR');
+ylabel('M_{on} / M_{ref}');
 xlim([0,1000]);
 ylim([0,1]);
 ax = gca;

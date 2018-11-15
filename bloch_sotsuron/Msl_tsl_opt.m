@@ -26,7 +26,7 @@ fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 8e-9;
+Bos = 80e-9;
 
 %-------------------------------------------------------------------------------
 %parameter of Newton's methods
@@ -65,6 +65,6 @@ for i = 1:size(t,2)
   if n==N_max
     disp('Don''t convergent')
   else
-    disp(t_old*1e3)
+    disp(t_old)
   end
 end

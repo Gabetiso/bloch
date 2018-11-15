@@ -26,7 +26,7 @@ fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 8e-9;
+Bos = 80e-9;
 tsl = linspace(0,1000e-3,1e3);
 
 %-------------------------------------------------------------------------------
@@ -57,7 +57,6 @@ plot(tsl*1e3,f,tsl*1e3,df);
 xlabel('T_{sl}[ms]');
 ylabel('difference of magnetization');
 xlim([0,1000]);
-ylim([-0.1,0.1]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
