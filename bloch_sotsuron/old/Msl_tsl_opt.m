@@ -26,8 +26,7 @@ fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 364e-9;
-tsl = linspace(0,1000e-3,1e3);
+Bos =364e-9;
 
 %-------------------------------------------------------------------------------
 %parameter of Newton's methods
@@ -43,21 +42,33 @@ be = sqrt( omega_sl(1)^2 + omega_sl(3)^2 - (R1r-R2r)^2/4 );
 A = (-al+R2r)*M(2)-omega_sl(3)*M(1)+omega_sl(1)*M(3);
 
 %-------------------------------------------------------------------------------
-%function
+%Newton's methods
 %-------------------------------------------------------------------------------
-f = zeros(size(tsl));
-df = zeros(size(tsl));
-for i = 1:size(tsl,2)
-  f(i) = M(2)*exp(-tsl(i)/T1r)-exp(-al*tsl(i))*( M(2)*cos(be*tsl(i))+A/be*sin(be*tsl(i)) );
-  df(i) = -M(2)/T1r*exp(-tsl(i)/T1r)+exp(-al*tsl(i))*( al*M(2)*cos(be*tsl(i))+be*M(2)*sin(be*tsl(i))+A*al/be*sin(be*tsl(i))-A*cos(be*tsl(i)) );
-end
+df = @(t) -M(2)/T1r*exp(-t/T1r)+exp(-al*t)*( al*M(2)*cos(be*t)+be*M(2)*sin(be*t)+A*al/be*sin(be*t)-A*cos(be*t) );%Function
+ddf = @(t) M(2)/T1r^2*exp(-t/T1r)+exp(-al*t)*( -al^2*M(2)*cos(be*t)-2*al*be*M(2)*sin(be*t)-A*al^2/be*sin(be*t)...
+          +2*al*A*cos(be*t)+A*be*sin(be*t)+be^2*M(2)*cos(be*t) ); %Derivative of f
 
-figure;
-plot(tsl*1e3,f,tsl*1e3,df);
-xlabel('T_{sl}[ms]');
-legend('f','df');
-xlim([0,1000]);
-ax = gca;
-ax.FontName = 'Times New Roman';
-ax.FontSize = 16;
-saveas(gcf,'./Result/Msl_tsl_opt','png');
+t = [5e-4,1e-3,5e-3,1e-2,4e-2,6e-2,8e-2,1e-1,1.5e-1]; %Initial Value
+N_max = 100;
+
+for i = 1:size(t,2)
+  t_old = t(i);
+  for n = 1:N_max
+    t_new = t_old - df(t_old)/ddf(t_old);
+    if abs(t_new - t_old) < 1e-7  %Convergence determination
+      break
+    end
+    t_old = t_new;
+  end
+
+  if n==N_max
+    disp('Don''t convergent')
+  else
+    if df(t_old - 1e-4)>0 & df(t_old + 1e-4)<0
+      disp(t_old)
+    else
+      disp(t_old)
+      %disp('Minimum value')
+    end
+  end
+end

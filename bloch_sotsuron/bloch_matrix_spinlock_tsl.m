@@ -9,8 +9,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 884e-3;
-T2 = 72e-3;
+T1 = 68e-3;
+T2 = 81e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -20,8 +20,8 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of bloch_second
 %-------------------------------------------------------------------------------
-T1r = 150e-3;
-T2r = 70e-3;
+T1r = 85e-3;
+T2r = 60e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
@@ -67,4 +67,4 @@ ylim([0,1]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
-saveas(gcf,'tsl','png');
+saveas(gcf,'./Result/tsl','png');

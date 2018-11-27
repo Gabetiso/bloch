@@ -53,4 +53,4 @@ ylim([0,1]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
-saveas(gcf,'Bos','png');
+saveas(gcf,'./Result/Bos','png');

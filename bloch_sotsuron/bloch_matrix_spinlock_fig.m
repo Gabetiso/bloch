@@ -87,4 +87,4 @@ ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
 grid on;
 grid minor;
-saveas(gcf,'spinlock','png');
+saveas(gcf,'./Result/spinlock','png');
