@@ -21,7 +21,7 @@ function [t_nt] = newton(df,ddf)
     else
       if t_old < 0
         t_nt(i) = 1e10; %Inappropriate
-      elseif df(t_old - 1e-4)>0 & df(t_old + 1e-4)<0
+      elseif df(t_old - 1e-4)>0 && df(t_old + 1e-4)<0
         t_nt(i) = t_old; %Maximal Value
       else
         t_nt(i) = 1e5;  %Minimum value

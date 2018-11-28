@@ -10,8 +10,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 50e-3;
-T2 = 55e-3;
+T1 = 100e-3;
+T2 = 80e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -27,7 +27,7 @@ fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos =364e-9;
+Bos =80e-9;
 
 %-------------------------------------------------------------------------------
 %parameter of Newton's methods

@@ -10,8 +10,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 50e-3;
-T2 = 55e-3;
+T1 = 100e-3;
+T2 = 80e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -21,13 +21,13 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of Spin Lock
 %-------------------------------------------------------------------------------
-T1r = 60e-3;
+T1r = 100e-3;
 T2r = 100e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = linspace(30e-9,600e-9,1e2);
+Bos = linspace(20e-9,600e-9,1e2);
 
 %-------------------------------------------------------------------------------
 %parameter of Newton's methods
@@ -37,7 +37,7 @@ R1r = 1/T1r;
 R2r = 1/T2r;
 al = (R1r+R2r)/2;
 %N_max = 100;
-tsl = zeros(1,size(Bos,2));
+tsl = zeros(1,size(T1r,2));
 %t = [1e-3,1e-2,4e-2,6e-2,8e-2,1e-1,1.5e-1];
 %ta = zeros(size(t));
 
@@ -86,9 +86,9 @@ end
 figure;
 plot(Bos*1e9,tsl*1e3);
 xlabel('B_{os}(nT)');
-ylabel('T_{sl}(ms)');
+ylabel('Optimized T_{sl}(ms)');
 xlim([0,600]);
-ylim([0,160]);
+ylim([0,200]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
