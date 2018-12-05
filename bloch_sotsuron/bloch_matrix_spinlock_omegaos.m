@@ -36,12 +36,11 @@ scr = zeros( size(fos) );
 %function
 %-------------------------------------------------------------------------------
 [M] = bloch_first( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
-[M_sl2off] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M );
 
 for i = 1:size(fos,2)
   [M_sl] = bloch_second( T1rho, T2rho, Bsl, Bos, omega_os(i), tsl, M );
   [M_sl2] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl );
-  scr(i) = M_sl2(3)/M_sl2off(3);
+  scr(i) = M_sl2(3)/M_i(3);
 end
 
 figure;

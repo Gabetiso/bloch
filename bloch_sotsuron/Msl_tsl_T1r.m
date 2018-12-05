@@ -10,8 +10,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 100e-3;
-T2 = 80e-3;
+T1 = 47.8e-3;
+T2 = 54.5e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -27,7 +27,7 @@ fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 80e-9;
+Bos = 500e-9;
 b_os_x0 = Bos/2;
 b_os_z0 = 0;
 omega_sl = gamma * [b_os_x0; Bsl; b_os_z0];
@@ -61,7 +61,7 @@ plot(T1r*1e3,tsl*1e3);
 xlabel('T_{1\rho}(ms)');
 ylabel('Optimized T_{sl}(ms)');
 xlim([0,200]);
-ylim([0,200]);
+ylim([0,70]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;

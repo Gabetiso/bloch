@@ -64,7 +64,7 @@ legend('B_{os}=80nT','B_{os}=160nT','B_{os}=240nT','B_{os}=320nT','B_{os}=400nT'
 xlabel('T_{1\rho}(ms)');
 ylabel('Optimized T_{sl}(ms)');
 xlim([0,200]);
-ylim([0,50]);
+ylim([0,200]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;

@@ -18,52 +18,46 @@ M_inf = 1;
 M_i = [0; 0; 1];
 
 %-------------------------------------------------------------------------------
-%parameter of bloch_second
+%parameter of Spin Lock
 %-------------------------------------------------------------------------------
-T1r = 150e-3;
-T2r = 70e-3;
+T1r = linspace(10e-3,360e-3,6);
+T2r = 100e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
 Bos = 80e-9;
-%tsl = 50e-3;
+tsl = linspace(0,1000e-3,1e2);
 
-tsl = linspace(0,500e-3,200); %variable %1/fsl=10msの周期にするべき
-scr = zeros( size(tsl) );
-scr_t1r = zeros( size(tsl) );
+%-------------------------------------------------------------------------------
+%parameter of Newton's methods
+%-------------------------------------------------------------------------------
+[M] = bloch_first( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
+R2r = 1/T2r;
+b_os_x0 = Bos/2;
+b_os_z0 = 0;
+omega_sl = gamma * [b_os_x0; Bsl; b_os_z0];
 
 %-------------------------------------------------------------------------------
 %function
 %-------------------------------------------------------------------------------
-[M] = bloch_first( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
-
-for i = 1:size(tsl,2)
-  %SIRS
-  [M_sl] = bloch_second( T1r, T2r, Bsl, Bos, omega_os, tsl(i), M );
-  [M_sl2on] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl );
-
-  %T1rho relaxation
-  M_t1r = [0;M(2)*exp(-tsl(i)/T1r);0];
-  [M_t1r2] = bloch_first( T1, T2, -b_x0, b_y0, trf, M_inf, M_t1r );
-
-  %signal change ratio
-  scr(i) = M_sl2on(3)/M_i(3);
-  scr_t1r(i) = M_t1r2(3)/M_i(3);
+f = zeros(size(T1r,2),size(tsl,2));
+for i = 1:size(T1r,2)
+  R1r = 1/T1r(i);
+  al = (R1r+R2r)/2;
+  be = sqrt( omega_sl(1)^2 + omega_sl(3)^2 - (R1r-R2r)^2/4 );
+  A = (-al+R2r)*M(2)-omega_sl(3)*M(1)+omega_sl(1)*M(3);
+  for j = 1:size(tsl,2)
+    f(i,j) = M(2)*exp(-tsl(j)/T1r(i))-exp(-al*tsl(j))*( M(2)*cos(be*tsl(j))+A/be*sin(be*tsl(j)) );
+  end
 end
 
 figure;
-plot(tsl*1e3,scr);
-hold on;
-plot(tsl*1e3,scr_t1r);
-plot(tsl*1e3,scr_t1r - scr);
-hold off;
-legend('SIRS','T_{1\rho} relaxation','T_{1\rho} relaxation - SIRS');
-xlabel('T_{sl}(ms)');
-ylabel('M_{on} / M_{ref}');
-xlim([0,500]);
-ylim([-0.1,1.1]);
+plot(tsl*1e3,f);
+legend('T_{1\rho}=10ms','T_{1\rho}=80ms','T_{1\rho}=150ms','T_{1\rho}=220ms','T_{1\rho}=290ms','T_{1\rho}=360ms');
+xlabel('T_{sl}[ms]');
+xlim([0,1000]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
-saveas(gcf,'./Result/tsl_50ms','png');
+saveas(gcf,'./Result/T1r_satu','png');
