@@ -9,8 +9,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 150e-3;
-T2 = 80e-3;
+T1 = 121.7e-3;
+T2 = 154.7e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -20,61 +20,35 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of bloch_second
 %-------------------------------------------------------------------------------
-T1rho = 150e-3;
-T2rho = 70e-3;
+T1rho = 176.1e-3;
+T2rho = T2;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 80e-9;
+Bos = 600e-9;
 omega_os = fos * 2 * pi;
-tsl = 150e-3;
+tsl = 40e-3;
 
 %-------------------------------------------------------------------------------
 %function
 %-------------------------------------------------------------------------------
 [M] = bloch_first_fig( T1, T2, b_x0, b_y0, trf, M_inf, M_i );
 [M_sl] = bloch_second_fig( T1rho, T2rho, Bsl, Bos, omega_os, tsl, M(:,end) );
-[M_sl2] = bloch_first_fig( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl(:,end) );
+[M_rev] = bloch_first_fig( T1, T2, -b_x0, b_y0, trf, M_inf, M_sl(:,end) );
 
 %-------------------------------------------------------------------------------
 %figure
 %-------------------------------------------------------------------------------
-M_x = zeros(1,size(M,2));
-M_y = zeros(1,size(M,2));
-M_z = zeros(1,size(M,2));
-M_sl_x = zeros(1,size(M_sl,2));
-M_sl_y = zeros(1,size(M_sl,2));
-M_sl_z = zeros(1,size(M_sl,2));
-M_sl2_x = zeros(1,size(M_sl2,2));
-M_sl2_y = zeros(1,size(M_sl2,2));
-M_sl2_z = zeros(1,size(M_sl2,2));
-for i = 1:size(M,2)
-  M_x(i) = M(1,i);
-  M_y(i) = M(2,i);
-  M_z(i) = M(3,i);
-end
-for j = 1:size(M_sl,2)
-  M_sl_x(j) = M_sl(1,j);
-  M_sl_y(j) = M_sl(2,j);
-  M_sl_z(j) = M_sl(3,j);
-end
-for k = 1:size(M_sl2,2)
-  M_sl2_x(k) = M_sl2(1,k);
-  M_sl2_y(k) = M_sl2(2,k);
-  M_sl2_z(k) = M_sl2(3,k);
-end
-
+%axis
 a = -1:1e-2:1;
 b = zeros(size(a));
 
 figure;
-plot3(M_x,M_y,M_z,'b');
+plot3(M(1,:),M(2,:),M(3,:),'b');
 hold on;
-plot3(M_sl_x,M_sl_y,M_sl_z,'r');
-plot3(M_sl2_x,M_sl2_y,M_sl2_z,'b');
-plot3(a,b,b,'k');
-plot3(b,a,b,'k');
-plot3(b,b,a,'k');
+plot3(M_sl(1,:),M_sl(2,:),M_sl(3,:),'r');
+plot3(M_rev(1,:),M_rev(2,:),M_rev(3,:),'b');
+plot3(a,b,b,'k',b,b,a,'k',b,a,b,'k'); %axis
 hold off;
 xlabel('M_x');
 ylabel('M_y');

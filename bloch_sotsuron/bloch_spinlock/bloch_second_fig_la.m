@@ -14,7 +14,7 @@ function [M_sl] = bloch_second_fig_la(T1rho, T2rho, Bsl, Bos, omega_os, tsl, M_s
 
   R1rho = 1/T1rho;    %1/s
   R2rho = 1/T2rho;    %1/s
-  t = 0:1e-5:tsl;
+  t = linspace(0,tsl,500);
   M_sl = zeros(3,size(t,2));
 
   omega_sl = gamma * [b_os_x0; Bsl; b_os_z0] - [0;omega_os;0];

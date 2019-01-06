@@ -11,7 +11,7 @@ function [M] = bloch_first_fig(T1, T2, b_x0, b_y0, trf, M_inf, M_i)
   %trf = 5.8e-4;
   R1 = 1/T1; %1/s
   R2 = 1/T2; %1/s
-  t = 0:1e-5:trf;
+  t = linspace(0,trf,100);
   M = zeros(3,size(t,2));
 
   omega = gamma * [b_x0; b_y0; B0] - [0;0;omega_0];

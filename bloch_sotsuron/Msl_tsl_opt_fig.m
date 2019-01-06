@@ -9,8 +9,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 100e-3;
-T2 = 80e-3;
+T1 = 121.7e-3;
+T2 = 154.7e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -20,13 +20,13 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of Spin Lock
 %-------------------------------------------------------------------------------
-T1r = 60e-3;
-T2r = 100e-3;
+T1r = 176.1e-3;
+T2r = T2;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 480e-9;
+Bos = 600e-9;
 tsl = linspace(0,1000e-3,1e3);
 
 %-------------------------------------------------------------------------------
@@ -46,17 +46,24 @@ A = (-al+R2r)*M(2)-omega_sl(3)*M(1)+omega_sl(1)*M(3);
 %function
 %-------------------------------------------------------------------------------
 f = zeros(size(tsl));
+a = zeros(size(tsl));
+b = zeros(size(tsl));
 df = zeros(size(tsl));
 for i = 1:size(tsl,2)
-  f(i) = M(2)*exp(-tsl(i)/T1r)-exp(-al*tsl(i))*( M(2)*cos(be*tsl(i))+A/be*sin(be*tsl(i)) );
-  df(i) = -M(2)/T1r*exp(-tsl(i)/T1r)+exp(-al*tsl(i))*( al*M(2)*cos(be*tsl(i))+be*M(2)*sin(be*tsl(i))+A*al/be*sin(be*tsl(i))-A*cos(be*tsl(i)) );
+  a(i) = M(2)*exp(-tsl(i)/T1r);
+  b(i) = exp(-al*tsl(i))*( M(2)*cos(be*tsl(i))+A/be*sin(be*tsl(i)) );
+  f(i) = a(i)-b(i);
+  df(i) = -M(2)/T1r*exp(-tsl(i)/T1r)+exp(-al*tsl(i))...
+  *( al*M(2)*cos(be*tsl(i))+be*M(2)*sin(be*tsl(i))+A*al/be*sin(be*tsl(i))-A*cos(be*tsl(i)) );
 end
 
 figure;
-plot(tsl*1e3,f,tsl*1e3,df);
-xlabel('T_{sl}[ms]');
-legend('f','df');
-xlim([0,1000]);
+plot(tsl*1e3,a,tsl*1e3,abs(b),tsl*1e3,f);
+%plot(tsl*1e3,f,tsl*1e3,df);
+xlabel('T_{sl}(ms)');
+legend('a','b','c');
+xlim([0,50]);
+ylim([0,2]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;

@@ -9,8 +9,8 @@ FA = deg2rad(90); %flip angle   %rad
 %-------------------------------------------------------------------------------
 %parameter of bloch_first
 %-------------------------------------------------------------------------------
-T1 = 100e-3;
-T2 = 80e-3;
+T1 = 121.7e-3;
+T2 = 159e-3;
 trf = 1e-3;  %given parameter
 b_x0 = FA/(gamma*trf);
 b_y0 = 0;
@@ -20,16 +20,16 @@ M_i = [0; 0; 1];
 %-------------------------------------------------------------------------------
 %parameter of bloch_second
 %-------------------------------------------------------------------------------
-T1r = 150e-3;
-T2r = 70e-3;
+T1r = 176.1e-3;
+T2r = 176.1e-3;
 fsl = 100; %spin lock frequency   %Hz
 fos = 100; %brain frequency   %Hz
 omega_os = 2 * pi * fos;
 Bsl = (fsl * 2 * pi)/gamma;
-Bos = 80e-9;
+Bos = 450e-9;
 %tsl = 50e-3;
 
-tsl = linspace(0,500e-3,200); %variable %1/fsl=10msの周期にするべき
+tsl = linspace(0,500e-3,1e3); %variable %1/fsl=10msの周期にするべ�
 scr = zeros( size(tsl) );
 scr_t1r = zeros( size(tsl) );
 
@@ -53,7 +53,7 @@ for i = 1:size(tsl,2)
 end
 
 figure;
-plot(tsl*1e3,scr);
+plot(tsl*1e3,abs(scr));
 hold on;
 plot(tsl*1e3,scr_t1r);
 plot(tsl*1e3,scr_t1r - scr);
@@ -61,9 +61,9 @@ hold off;
 legend('SIRS','T_{1\rho} relaxation','T_{1\rho} relaxation - SIRS');
 xlabel('T_{sl}(ms)');
 ylabel('M_{on} / M_{ref}');
-xlim([0,500]);
-ylim([-0.1,1.1]);
+xlim([0,50]);
+ylim([0,2]);
 ax = gca;
 ax.FontName = 'Times New Roman';
 ax.FontSize = 16;
-saveas(gcf,'./Result/tsl_50ms','png');
+saveas(gcf,['./Result/tsl','1mM.png']);
